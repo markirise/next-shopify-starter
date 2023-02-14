@@ -44,7 +44,7 @@ function CartTable({ cart }) {
                 />
                 <Link passHref href={`/products/${item.productHandle}`}>
                   <a className="pt-1 hover:text-palette-dark">
-                    {item.productTitle}, {item.variantTitle}
+                    {item.productTitle}, {item.variantTitle}, To: {item.customAttributes["recipient"]}
                   </a>
                 </Link>
               </td>

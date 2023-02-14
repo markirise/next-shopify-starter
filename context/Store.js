@@ -57,14 +57,16 @@ export function CartProvider({ children }) {
     } else {
       let newCart = [...cart]
       let itemAdded = false
+      // We are commenting this out because you can be sending the
+      // same card to a different person. 
       // loop through all cart items to check if variant
       // already exists and update quantity
-      newCart.map(item => {
-        if (item.variantId === newItem.variantId) {
-          item.variantQuantity += newItem.variantQuantity
-          itemAdded = true
-        }
-      })
+      // newCart.map(item => {
+      //   if (item.variantId === newItem.variantId) {
+      //     item.variantQuantity += newItem.variantQuantity
+      //     itemAdded = true
+      //   }
+      // })
 
       let newCartWithItem = [...newCart]
       if (itemAdded) {
@@ -80,7 +82,7 @@ export function CartProvider({ children }) {
     setisLoading(false)
   }
 
-  async function updateCartItemQuantity(id, quantity) {
+  async function updateCartItemQuantity(id, quantity, customAttributes) {
     setisLoading(true)
     let newQuantity = Math.floor(quantity)
     if (quantity === '') {
@@ -89,7 +91,8 @@ export function CartProvider({ children }) {
     let newCart = [...cart]
     newCart.forEach(item => {
       if (item.variantId === id) {
-        item.variantQuantity = newQuantity
+        item.variantQuantity = newQuantity;
+        item.customAttributes = customAttributes;
       }
     })
 

@@ -4,6 +4,9 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { useCartContext, useAddToCartContext } from '@/context/Store'
 
 function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
+  const [recipient, setRecipient] = useState("Recipient")
+  const [sender, setSender] = useState("Sender")
+  const [message, setMessage] = useState("Message")
   const [quantity, setQuantity] = useState(1)
   const [variantId, setVariantId] = useState(variants[0].node.id)
   const [variant, setVariant] = useState(variants[0])
@@ -29,6 +32,13 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
 
   async function handleAddToCart() {
     const varId = variant.node.id
+
+    const customAttributes = {
+      sender: sender,
+      recipient: recipient,
+      message: message
+    }
+
     // update store context
     if (quantity !== '') {
       addToCart({
@@ -38,9 +48,14 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
         variantId: varId,
         variantPrice: variant.node.price,
         variantTitle: variant.node.title,
-        variantQuantity: quantity
+        variantQuantity: quantity,
+        customAttributes: customAttributes
       })
     }
+  }
+
+  function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   function updateQuantity(e) {
@@ -48,6 +63,30 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
       setQuantity('')
     } else {
       setQuantity(Math.floor(e))
+    }
+  }
+
+  function updateSender(e) {
+    if (e === '') {
+      setSender('')
+    } else {
+      setSender(capitalizeFirstLetter(e))
+    }
+  }
+
+  function updateRecipient(e) {
+    if (e === '') {
+      setRecipient('')
+    } else {
+      setRecipient(capitalizeFirstLetter(e))
+    }
+  }
+
+  function updateMessage(e) {
+    if (e === '') {
+      setMessage('')
+    } else {
+      setMessage(capitalizeFirstLetter(e))
     }
   }
 
@@ -91,6 +130,46 @@ function ProductForm({ title, handle, variants, setVariantPrice, mainImg }) {
           </select>
         </div>
       </div>
+
+      <div className="flex justify-start space-x-2 w-full">
+        <div className="flex flex-col items-start space-y-1 flex-grow-0">
+          <label className="text-gray-500 text-base">Sender</label>
+          <input
+            type="text"
+            id="sender"
+            name="sender"
+            value={sender}
+            onChange={(e) => updateSender(e.target.value)}
+            className="text-gray-900 form-input border border-gray-300 w-16 rounded-sm focus:border-palette-light focus:ring-palette-light"
+          />
+        </div>
+        <div className="flex flex-col items-start space-y-1 flex-grow">
+          <label className="text-gray-500 text-base">Recipient</label>
+          <input
+            type="text"
+            id="recipient"
+            name="recipient"
+            value={recipient}
+            onChange={(e) => updateRecipient(e.target.value)}
+            className="text-gray-900 form-input border border-gray-300 w-16 rounded-sm focus:border-palette-light focus:ring-palette-light"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-start space-x-2 w-full">
+        <div className="flex flex-col items-start space-y-1 flex-grow">
+          <label className="text-gray-500 text-base">Message</label>
+          <textarea
+            type="text"
+            id="message"
+            name="message"
+            value={message}
+            onChange={(e) => updateMessage(e.target.value)}
+            className="text-gray-900 form-input border border-gray-300 w-16 rounded-sm focus:border-palette-light focus:ring-palette-light"
+          />
+        </div>
+      </div>
+
       <button
         className={atcBtnStyle}
         aria-label="cart-button"
